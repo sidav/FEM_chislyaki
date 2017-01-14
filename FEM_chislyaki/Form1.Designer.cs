@@ -33,9 +33,10 @@
             // 
             // DoMagicBtn
             // 
-            this.DoMagicBtn.Location = new System.Drawing.Point(455, 307);
+            this.DoMagicBtn.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.DoMagicBtn.Location = new System.Drawing.Point(0, 319);
             this.DoMagicBtn.Name = "DoMagicBtn";
-            this.DoMagicBtn.Size = new System.Drawing.Size(100, 38);
+            this.DoMagicBtn.Size = new System.Drawing.Size(567, 38);
             this.DoMagicBtn.TabIndex = 0;
             this.DoMagicBtn.Text = "Расчёт";
             this.DoMagicBtn.UseVisualStyleBackColor = true;
@@ -49,6 +50,7 @@
             this.Controls.Add(this.DoMagicBtn);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.ResumeLayout(false);
 
         }

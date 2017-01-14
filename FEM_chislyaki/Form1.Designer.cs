@@ -33,7 +33,7 @@
             // 
             // DoMagicBtn
             // 
-            this.DoMagicBtn.Location = new System.Drawing.Point(513, 470);
+            this.DoMagicBtn.Location = new System.Drawing.Point(455, 307);
             this.DoMagicBtn.Name = "DoMagicBtn";
             this.DoMagicBtn.Size = new System.Drawing.Size(100, 38);
             this.DoMagicBtn.TabIndex = 0;
@@ -45,7 +45,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(625, 520);
+            this.ClientSize = new System.Drawing.Size(567, 357);
             this.Controls.Add(this.DoMagicBtn);
             this.Name = "Form1";
             this.Text = "Form1";

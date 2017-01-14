@@ -71,6 +71,7 @@
     <Compile Include="GridRender.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Point2d.cs" />
+    <Compile Include="Polygon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tetrahedron.cs" />

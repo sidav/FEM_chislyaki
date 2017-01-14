@@ -15,16 +15,18 @@ namespace FEM_chislyaki
         public Form1()
         {
             InitializeComponent();
+
+            System.Drawing.Graphics formGraphics;
+            formGraphics = this.CreateGraphics();
+            SolidBrush myBrush = new SolidBrush(System.Drawing.Color.Black);
+            formGraphics.FillRectangle(myBrush, new Rectangle(0, 0, this.Width, this.Height));
+
+            GridRender.drawer = formGraphics;
         }
 
         private void DoMagicBtn_Click(object sender, EventArgs e)
         {
-            System.Drawing.SolidBrush myBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Red);
-            System.Drawing.Graphics formGraphics;
-            formGraphics = this.CreateGraphics();
-            formGraphics.FillRectangle(myBrush, new Rectangle(0, 0, 200, 300));
-            myBrush.Dispose();
-            formGraphics.Dispose();
+            GridRender.doShit();
         }
     }
 }

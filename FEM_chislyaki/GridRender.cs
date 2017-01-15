@@ -105,41 +105,52 @@ namespace FEM_chislyaki
             return reduced;
         }
 
-        static List<Polygon> rotatePolys(List<Polygon> polysIn)
-        {
-            List<Polygon> rotatedPolys = polysIn;
-            double cr = Camera.roll, cp = Camera.pitch, cy = Camera.yaw;
-            //Вычисляем центр многогранника, заданного кучей полигонов.
-            Point meanPoint = new Point(0, 0, 0);
-            foreach (Polygon p in polysIn)
-            {
-                meanPoint.x += p.pt1.x + p.pt2.x + p.pt3.x;
-                meanPoint.y += p.pt1.y + p.pt2.y + p.pt3.y;
-                meanPoint.z += p.pt1.z + p.pt2.z + p.pt3.z;
-            }
-            meanPoint.x /= (polysIn.Count*3);
-            meanPoint.y /= (polysIn.Count*3);
-            meanPoint.z /= (polysIn.Count*3);
-            //Центр есть, теперь надо повернуть многогранник относительно центра.
-            //Переходим в собственные координаты многогранника:
-            foreach (Polygon p in rotatedPolys)
-            {
-                //p.pt1.x -= meanPoint.x;
-                //p.pt2.x -= meanPoint.x;
-                //p.pt3.x -= meanPoint.x;
-                //p.pt1.y -= meanPoint.y;
-                //p.pt2.y -= meanPoint.y;
-                //p.pt3.y -= meanPoint.y;
-                //p.pt1.z -= meanPoint.z;
-                //p.pt2.z -= meanPoint.z;
-                //p.pt3.z -= meanPoint.z;
-                //Ок. Поворачиваем эту хреновину.
-                p.pt1.Rotate(cr, cp, cy);
-                p.pt2.Rotate(cr, cp, cy);
-                p.pt3.Rotate(cr, cp, cy);
-            }
-            return rotatedPolys;
-        }
+        //НИ ХРЕНА НЕ РАБОТАЕТ АБСОЛЮТНО.
+        //static List<Polygon> rotatePolys(List<Polygon> polysIn)
+        //{
+        //    List<Polygon> rotatedPolys = polysIn;
+        //    double cr = Camera.roll, cp = Camera.pitch, cy = Camera.yaw;
+        //    //Вычисляем центр многогранника, заданного кучей полигонов.
+        //    Point meanPoint = new Point(0, 0, 0);
+        //    foreach (Polygon p in polysIn)
+        //    {
+        //        meanPoint.x += p.pt1.x + p.pt2.x + p.pt3.x;
+        //        meanPoint.y += p.pt1.y + p.pt2.y + p.pt3.y;
+        //        meanPoint.z += p.pt1.z + p.pt2.z + p.pt3.z;
+        //    }
+        //    meanPoint.x /= (polysIn.Count * 3);
+        //    meanPoint.y /= (polysIn.Count * 3);
+        //    meanPoint.z /= (polysIn.Count * 3);
+        //    //Центр есть, теперь надо повернуть многогранник относительно центра.
+        //    //Переходим в собственные координаты многогранника:
+        //    foreach (Polygon p in rotatedPolys)
+        //    {
+        //        p.pt1.x -= meanPoint.x;
+        //        p.pt2.x -= meanPoint.x;
+        //        p.pt3.x -= meanPoint.x;
+        //        p.pt1.y -= meanPoint.y;
+        //        p.pt2.y -= meanPoint.y;
+        //        p.pt3.y -= meanPoint.y;
+        //        p.pt1.z -= meanPoint.z;
+        //        p.pt2.z -= meanPoint.z;
+        //        p.pt3.z -= meanPoint.z;
+        //        //Ок. Поворачиваем эту хреновину.
+        //        p.pt1.Rotate(cr, cp, cy);
+        //        p.pt2.Rotate(cr, cp, cy);
+        //        p.pt3.Rotate(cr, cp, cy);
+
+        //        p.pt1.x += meanPoint.x;
+        //        p.pt2.x += meanPoint.x;
+        //        p.pt3.x += meanPoint.x;
+        //        p.pt1.y += meanPoint.y;
+        //        p.pt2.y += meanPoint.y;
+        //        p.pt3.y += meanPoint.y;
+        //        p.pt1.z += meanPoint.z;
+        //        p.pt2.z += meanPoint.z;
+        //        p.pt3.z += meanPoint.z;
+        //    }
+        //    return rotatedPolys;
+        //}
 
         static void drawPolygon(Polygon p)
         {
@@ -177,12 +188,14 @@ namespace FEM_chislyaki
             Tetrahedron trhd = new Tetrahedron(a, b, c, d);
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);
-            lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
+
+            //lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
+
             List<Polygon> lp = TetrsToPolygons(lt);
             lp = reducePolygonsNumber(lp);
             setColor(255, 255, 255);
             drawString("Всего " + lp.Count + " полигонов.", 0, 0);
-            lp = rotatePolys(lp);
+            //lp = rotatePolys(lp);
             foreach (Polygon p in lp)
                 drawPolygon(p);
             myPen.Dispose();

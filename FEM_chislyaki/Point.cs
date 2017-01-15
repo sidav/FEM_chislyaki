@@ -23,5 +23,24 @@ namespace FEM_chislyaki
             z = zz;
             number = num;
         }
+        public void Rotate(double roll, double pitch, double yaw)
+        {
+            double newX, newY, newZ;
+            //Around X:
+            newY = y * Math.Cos(pitch) - z * Math.Sin(pitch);
+            newZ = y * Math.Sin(pitch) + z * Math.Cos(pitch);
+            y = newY;
+            z = newZ;
+            //Around Y:
+            newX = x * Math.Cos(yaw) + z * Math.Sin(yaw);
+            newZ = -x * Math.Sin(yaw) + z * Math.Cos(yaw);
+            x = newX;
+            z = newZ;
+            //по z:
+            newX = x * Math.Cos(roll) - y * Math.Sin(roll);
+            newY = x * Math.Sin(roll) + y * Math.Cos(roll);
+            x = newX;
+            y = newY;
+        }
     }
 }

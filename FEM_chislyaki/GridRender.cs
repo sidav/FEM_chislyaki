@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace FEM_chislyaki
 {
-    class GridRender
+    class GridRender //перспективная проекция и отрисовка будут тут
     {
+        const int verticeSize = 4;
         public static Graphics draw;
         static SolidBrush myBrush = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
         static Pen myPen = new Pen(Color.FromArgb(255, 0, 0, 0));
-        //const double h = 100; //Расстояние до плоскости проекции.
-        static double h = Form1.width/4; //Расстояние до плоскости проекции.
-        //перспективная проекция и отрисовка будут тут
+        public static double h = 0; //Расстояние до плоскости проекции.
+                                    //ЗАДАЁТСЯ В ФОРМЕ В СВЯЗИ СО ВСЯКОЙ ХЕРНЁЙ.
+
 
         static void setColor(int r, int g, int b)
         {
@@ -26,27 +27,29 @@ namespace FEM_chislyaki
         {
             //аффинные преобразования?
             //да не, фигня какая-то.
+            //Перевод в координаты камеры:
             double x = pt.x, y = pt.y, z = pt.z;
             x -= Camera.camX;
             y -= Camera.camY;
             z -= Camera.camZ;
-            //поворот отн. камеры по x:
-            double newY = y * Math.Cos(Camera.pitch) - z * Math.Sin(Camera.pitch);
-            double newZ = y * Math.Sin(Camera.pitch) + z * Math.Cos(Camera.pitch);
-            y = newY;
-            z = newZ;
-            //поворот отн. камеры по y:
-            double newX = x * Math.Cos(Camera.yaw) + z * Math.Sin(Camera.yaw);
-            newZ = -x * Math.Sin(Camera.yaw) + z * Math.Cos(Camera.yaw);
-            x = newX;
-            z = newZ;
-            //по z:
-            newX = x * Math.Cos(Camera.roll) - y * Math.Sin(Camera.roll);
-            newY = x * Math.Sin(Camera.roll) + y * Math.Cos(Camera.roll);
+            ////Нужен поворот отн. ЦЕНТРА, а не камеры!
+            ////поворот отн. камеры по x:
+            //double newY = y * Math.Cos(Camera.pitch) - z * Math.Sin(Camera.pitch);
+            //double newZ = y * Math.Sin(Camera.pitch) + z * Math.Cos(Camera.pitch);
+            //y = newY;
+            //z = newZ;
+            ////поворот отн. камеры по y:
+            //double newX = x * Math.Cos(Camera.yaw) + z * Math.Sin(Camera.yaw);
+            //newZ = -x * Math.Sin(Camera.yaw) + z * Math.Cos(Camera.yaw);
+            //x = newX;
+            //z = newZ;
+            ////по z:
+            //newX = x * Math.Cos(Camera.roll) - y * Math.Sin(Camera.roll);
+            //newY = x * Math.Sin(Camera.roll) + y * Math.Cos(Camera.roll);
 
-            x = newX;
-            y = newY;
-            z = newZ;
+            //x = newX;
+            //y = newY;
+            //z = newZ;
 
             double projX = (x * h / z) + Form1.width / 2;
             double projY = (y * h / z) + Form1.height / 2;
@@ -72,20 +75,59 @@ namespace FEM_chislyaki
             return polys;
         }
 
+        static List<Polygon> rotatePolys(List<Polygon> polysIn)
+        {
+            List<Polygon> rotatedPolys = polysIn;
+            double cr = Camera.roll, cp = Camera.pitch, cy = Camera.yaw;
+            //Вычисляем центр многогранника, заданного кучей полигонов.
+            Point meanPoint = new Point(0, 0, 0);
+            foreach (Polygon p in polysIn)
+            {
+                meanPoint.x += p.pt1.x + p.pt2.x + p.pt3.x;
+                meanPoint.y += p.pt1.y + p.pt2.y + p.pt3.y;
+                meanPoint.z += p.pt1.z + p.pt2.z + p.pt3.z;
+            }
+            meanPoint.x /= (polysIn.Count*3);
+            meanPoint.y /= (polysIn.Count*3);
+            meanPoint.z /= (polysIn.Count*3);
+            //Центр есть, теперь надо повернуть многогранник относительно центра.
+            //Переходим в собственные координаты многогранника:
+            foreach (Polygon p in rotatedPolys)
+            {
+                p.pt1.x -= meanPoint.x;
+                p.pt2.x -= meanPoint.x;
+                p.pt3.x -= meanPoint.x;
+                p.pt1.y -= meanPoint.y;
+                p.pt2.y -= meanPoint.y;
+                p.pt3.y -= meanPoint.y;
+                p.pt1.z -= meanPoint.z;
+                p.pt2.z -= meanPoint.z;
+                p.pt3.z -= meanPoint.z;
+                //Ок. Поворачиваем эту хреновину.
+                p.pt1.Rotate(cr, cp, cy);
+                p.pt2.Rotate(cr, cp, cy);
+                p.pt3.Rotate(cr, cp, cy);
+            }
+            return rotatedPolys;
+        }
+
         static void drawPolygon(Polygon p)
         {
-            setColor(255, 224, 0);
+            setColor(255, 0, 0);
             Point2d a = ProjectPoint(p.pt1);
             Point2d b = ProjectPoint(p.pt2);
             Point2d c = ProjectPoint(p.pt3);
             draw.DrawLine(myPen, a.x, a.y, b.x, b.y);
             draw.DrawLine(myPen, a.x, a.y, c.x, c.y);
             draw.DrawLine(myPen, b.x, b.y, c.x, c.y);
+            setColor(128, 224, 0);
+            draw.FillEllipse(myBrush, a.x-verticeSize/2, a.y-verticeSize/2, verticeSize, verticeSize);
+            draw.FillEllipse(myBrush, b.x - verticeSize / 2, b.y - verticeSize / 2, verticeSize, verticeSize);
+            draw.FillEllipse(myBrush, c.x - verticeSize / 2, c.y - verticeSize / 2, verticeSize, verticeSize);
         }
 
         public static void RenderGrid()
         {
-            h = Form1.height / 2;
             setColor(0, 0, 0);
             draw.FillRectangle(myBrush, 0, 0, Form1.width, Form1.height);
 
@@ -98,12 +140,10 @@ namespace FEM_chislyaki
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);
             List<Polygon> lp = TetrsToPolygons(lt);
+            lp = rotatePolys(lp);
             foreach (Polygon p in lp)
                 drawPolygon(p);
             //test end.
-
-            //setColor(255, 224, 0);
-            //draw.FillEllipse(myBrush, 0, 0, 25, 25);
         }
     }
 }

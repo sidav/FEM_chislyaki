@@ -58,15 +58,34 @@ namespace FEM_chislyaki
             if (e.KeyChar == 'f')
                 Camera.camZ -= 10;
             if (e.KeyChar == 'q')
-                Camera.yaw += 0.17;
+                Camera.yaw += 0.017;
             if (e.KeyChar == 'e')
-                Camera.yaw -= 0.17;
+                Camera.yaw -= 0.017;
+            if (e.KeyChar == 't')
+                Camera.pitch += 0.017;
+            if (e.KeyChar == 'g')
+                Camera.pitch -= 0.017;
+            if (e.KeyChar == 'z')
+                Camera.roll += 0.017;
+            if (e.KeyChar == 'c')
+                Camera.roll -= 0.017;
+            if (e.KeyChar == '[')
+                GridRender.h -= 10;
+            if (e.KeyChar == ']')
+                GridRender.h += 10;
             GridRender.RenderGrid();
             e.Handled = true;
         }
 
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            GridRender.h = height / 2;
+            GridRender.RenderGrid();
+        }
+
         private void DoMagicBtn_Click(object sender, EventArgs e)
         {
+            Camera.Reset();
             GridRender.RenderGrid();
         }
     }

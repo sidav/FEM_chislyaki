@@ -25,18 +25,19 @@ namespace FEM_chislyaki
             //Point[,,] pts = makePlate(hz, hy, hz, nx, ny, nz); //массив всех-всех точек, тоже пока не нужен вроде
             //int current = 0; //текущ. тетраэдр, тоже не нужно
             Point p1, p2, p3, p4, p5, p6, p7, p8; //точки текущего кирпича
+            int WRONG_NUM = 0; //Это неправильный способ, он тут временно. Хехехе.
             for (int i = 0; i < nx - 1; i++)
                 for (int j = 0; j < ny - 1; j++)
                     for (int k = 0; k < nz - 1; k++)
                     {
-                        p1 = new Point(i * hx, j * hy, k * hz);
-                        p2 = new Point(i * hx, (j + 1) * hy, k * hz);
-                        p3 = new Point((i + 1) * hx, (j + 1) * hy, k * hz);
-                        p4 = new Point((i + 1) * hx, j * hy, k * hz);
-                        p5 = new Point(i * hx, j * hy, (k + 1) * hz);
-                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz);
-                        p7 = new Point((i + 1) * hx, (j + 1) * hy, (k + 1) * hz);
-                        p8 = new Point((i + 1) * hx, j * hy, (k + 1) * hz);
+                        p1 = new Point(i * hx, j * hy, k * hz, WRONG_NUM);
+                        p2 = new Point(i * hx, (j + 1) * hy, k * hz, WRONG_NUM+1);
+                        p3 = new Point((i + 1) * hx, (j + 1) * hy, k * hz, WRONG_NUM+1);
+                        p4 = new Point((i + 1) * hx, j * hy, k * hz, WRONG_NUM + 1);
+                        p5 = new Point(i * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
+                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1);
+                        p7 = new Point((i + 1) * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1);
+                        p8 = new Point((i + 1) * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
                         tetr.Add(new Tetrahedron(p2, p1, p3, p6));
                         tetr.Add(new Tetrahedron(p4, p1, p8, p3));
                         tetr.Add(new Tetrahedron(p5, p1, p6, p8));

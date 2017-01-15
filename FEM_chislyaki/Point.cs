@@ -10,6 +10,23 @@ namespace FEM_chislyaki
     {
         public double x = 0, y = 0, z = 0;
         public int number;
+
+        public static bool operator ==(Point c1, Point c2)
+        {
+            bool a = false;
+            if (c1.x == c2.x && c1.y == c2.y && c1.z == c2.z)
+                a = true;
+            return a;
+        }
+
+        public static bool operator !=(Point c1, Point c2)
+        {
+            bool a = true;
+            if (c1.x == c2.x && c1.y == c2.y && c1.z == c2.z)
+                a = false;
+            return a;
+        }
+
         public Point(double xx, double yy, double zz)
         {
             x = xx;
@@ -23,6 +40,7 @@ namespace FEM_chislyaki
             z = zz;
             number = num;
         }
+
         public void Rotate(double roll, double pitch, double yaw)
         {
             double newX, newY, newZ;

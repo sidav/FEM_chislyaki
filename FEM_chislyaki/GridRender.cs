@@ -11,16 +11,21 @@ namespace FEM_chislyaki
     {
         const int verticeSize = 4;
         public static Graphics draw;
-        static SolidBrush myBrush = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
-        static Pen myPen = new Pen(Color.FromArgb(255, 0, 0, 0));
+        static SolidBrush myBrush;// = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
+        static Pen myPen;// = new Pen(Color.FromArgb(255, 0, 0, 0));
         public static double h = 0; //Расстояние до плоскости проекции.
                                     //ЗАДАЁТСЯ В ФОРМЕ В СВЯЗИ СО ВСЯКОЙ ХЕРНЁЙ.
 
 
         static void setColor(int r, int g, int b)
         {
-            myBrush.Color = Color.FromArgb(255, r, g, b);
-            myPen.Color = Color.FromArgb(255, r, g, b);
+            myBrush = new SolidBrush(Color.FromArgb(255, r, g, b));
+            myPen = new Pen(Color.FromArgb(255, r, g, b));
+        }
+
+        static void drawString(String s, int x, int y)
+        {
+            draw.DrawString(s, new Font("Terminus", 10), myBrush, x, y);
         }
 
         public static Point2d ProjectPoint(Point pt)
@@ -54,6 +59,8 @@ namespace FEM_chislyaki
             double projX = (x * h / z) + Form1.width / 2;
             double projY = (y * h / z) + Form1.height / 2;
             Point2d pt2d = new Point2d((int)projX, (int)projY);
+            if (z <= 0)
+                pt2d.Visibru = false;
             return pt2d;
         }
 
@@ -75,6 +82,29 @@ namespace FEM_chislyaki
             return polys;
         }
 
+        public static List<Polygon> reducePolygonsNumber(List<Polygon> polysIn)
+        {
+            List<Polygon> reduced = new List<Polygon>();
+            int allPolys = polysIn.Count;
+            reduced.Add(polysIn[0]);
+            bool add = true;
+            for (int i = 1; i < allPolys; i++)
+            {
+                add = true;
+                for (int j = 0; j < i; j++)
+                {
+                    if (polysIn[i].isEqual(polysIn[j]))
+                    {
+                        add = false;
+                        break;
+                    }
+                }
+                if (add)
+                    reduced.Add(polysIn[i]);
+            }
+            return reduced;
+        }
+
         static List<Polygon> rotatePolys(List<Polygon> polysIn)
         {
             List<Polygon> rotatedPolys = polysIn;
@@ -94,15 +124,15 @@ namespace FEM_chislyaki
             //Переходим в собственные координаты многогранника:
             foreach (Polygon p in rotatedPolys)
             {
-                p.pt1.x -= meanPoint.x;
-                p.pt2.x -= meanPoint.x;
-                p.pt3.x -= meanPoint.x;
-                p.pt1.y -= meanPoint.y;
-                p.pt2.y -= meanPoint.y;
-                p.pt3.y -= meanPoint.y;
-                p.pt1.z -= meanPoint.z;
-                p.pt2.z -= meanPoint.z;
-                p.pt3.z -= meanPoint.z;
+                //p.pt1.x -= meanPoint.x;
+                //p.pt2.x -= meanPoint.x;
+                //p.pt3.x -= meanPoint.x;
+                //p.pt1.y -= meanPoint.y;
+                //p.pt2.y -= meanPoint.y;
+                //p.pt3.y -= meanPoint.y;
+                //p.pt1.z -= meanPoint.z;
+                //p.pt2.z -= meanPoint.z;
+                //p.pt3.z -= meanPoint.z;
                 //Ок. Поворачиваем эту хреновину.
                 p.pt1.Rotate(cr, cp, cy);
                 p.pt2.Rotate(cr, cp, cy);
@@ -117,20 +147,28 @@ namespace FEM_chislyaki
             Point2d a = ProjectPoint(p.pt1);
             Point2d b = ProjectPoint(p.pt2);
             Point2d c = ProjectPoint(p.pt3);
-            draw.DrawLine(myPen, a.x, a.y, b.x, b.y);
-            draw.DrawLine(myPen, a.x, a.y, c.x, c.y);
-            draw.DrawLine(myPen, b.x, b.y, c.x, c.y);
+            if (a.Visibru && b.Visibru)
+                draw.DrawLine(myPen, a.x, a.y, b.x, b.y);
+            if (a.Visibru && c.Visibru)
+                draw.DrawLine(myPen, a.x, a.y, c.x, c.y);
+            if (b.Visibru && c.Visibru)
+                draw.DrawLine(myPen, b.x, b.y, c.x, c.y);
+            //Рисуем вершины в виде кружочков.
             setColor(128, 224, 0);
-            draw.FillEllipse(myBrush, a.x-verticeSize/2, a.y-verticeSize/2, verticeSize, verticeSize);
-            draw.FillEllipse(myBrush, b.x - verticeSize / 2, b.y - verticeSize / 2, verticeSize, verticeSize);
-            draw.FillEllipse(myBrush, c.x - verticeSize / 2, c.y - verticeSize / 2, verticeSize, verticeSize);
+            if (a.Visibru)
+                draw.FillEllipse(myBrush, a.x-verticeSize/2, a.y-verticeSize/2, verticeSize, verticeSize);
+            if (b.Visibru)
+                draw.FillEllipse(myBrush, b.x - verticeSize / 2, b.y - verticeSize / 2, verticeSize, verticeSize);
+            if (c.Visibru)
+                draw.FillEllipse(myBrush, c.x - verticeSize / 2, c.y - verticeSize / 2, verticeSize, verticeSize);
+            myPen.Dispose();
+            myBrush.Dispose();
         }
 
         public static void RenderGrid()
         {
             setColor(0, 0, 0);
             draw.FillRectangle(myBrush, 0, 0, Form1.width, Form1.height);
-
             //test:
             Point a = new Point(60, 0, 0);
             Point b = new Point(0, 60, 0);
@@ -139,10 +177,16 @@ namespace FEM_chislyaki
             Tetrahedron trhd = new Tetrahedron(a, b, c, d);
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);
+            lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
             List<Polygon> lp = TetrsToPolygons(lt);
+            lp = reducePolygonsNumber(lp);
+            setColor(255, 255, 255);
+            drawString("Всего " + lp.Count + " полигонов.", 0, 0);
             lp = rotatePolys(lp);
             foreach (Polygon p in lp)
                 drawPolygon(p);
+            myPen.Dispose();
+            myBrush.Dispose();
             //test end.
         }
     }

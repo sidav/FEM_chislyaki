@@ -15,5 +15,19 @@ namespace FEM_chislyaki
             pt2 = p2;
             pt3 = p3;
         }
+        public bool isEqual(Polygon sample)
+        {
+            Point s1 = sample.pt1, s2 = sample.pt2, s3 = sample.pt3;
+            if (
+                (pt1 == s1 && pt2 == s2 && pt3 == s3) ||
+                (pt1 == s1 && pt2 == s3 && pt3 == s2) ||
+                (pt1 == s2 && pt2 == s1 && pt3 == s3) ||
+                (pt1 == s2 && pt2 == s3 && pt3 == s1) ||
+                (pt1 == s3 && pt2 == s1 && pt3 == s2) ||
+                (pt1 == s3 && pt2 == s2 && pt3 == s1)
+                )
+                return true;
+            return false;
+        }
     }
 }

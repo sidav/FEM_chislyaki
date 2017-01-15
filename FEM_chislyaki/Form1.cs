@@ -46,17 +46,17 @@ namespace FEM_chislyaki
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 'a')
-                Camera.camX += 10;
+                Camera.camX += 3;
             if (e.KeyChar == 'd')
-                Camera.camX -= 10;
+                Camera.camX -= 3;
             if (e.KeyChar == 'w')
-                Camera.camY += 10;
+                Camera.camY += 3;
             if (e.KeyChar == 's')
-                Camera.camY -= 10;
+                Camera.camY -= 3;
             if (e.KeyChar == 'r')
-                Camera.camZ += 10;
+                Camera.camZ += 7;
             if (e.KeyChar == 'f')
-                Camera.camZ -= 10;
+                Camera.camZ -= 7;
             if (e.KeyChar == 'q')
                 Camera.yaw += 0.017;
             if (e.KeyChar == 'e')

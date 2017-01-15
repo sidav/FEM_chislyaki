@@ -8,7 +8,7 @@ namespace FEM_chislyaki
 {
     class Camera //и зачем оно здесь?..
     {
-        static double camX, camY, camZ;
-        static double pitch, roll, yaw;
+        public static double camX = 0, camY = 0, camZ = -300;
+        public static double pitch = 0, roll = 0, yaw = 0;
     }
 }

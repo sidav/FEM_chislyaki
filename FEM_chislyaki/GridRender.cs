@@ -13,7 +13,7 @@ namespace FEM_chislyaki
         static SolidBrush myBrush = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
         static Pen myPen = new Pen(Color.FromArgb(255, 0, 0, 0));
         //const double h = 100; //Расстояние до плоскости проекции.
-        static double h = Form1.width / 2; //Расстояние до плоскости проекции.
+        static double h = Form1.width/4; //Расстояние до плоскости проекции.
         //перспективная проекция и отрисовка будут тут
 
         static void setColor(int r, int g, int b)
@@ -26,12 +26,30 @@ namespace FEM_chislyaki
         {
             //аффинные преобразования?
             //да не, фигня какая-то.
+            double x = pt.x, y = pt.y, z = pt.z;
+            x -= Camera.camX;
+            y -= Camera.camY;
+            z -= Camera.camZ;
+            //поворот отн. камеры по x:
+            double newY = y * Math.Cos(Camera.pitch) - z * Math.Sin(Camera.pitch);
+            double newZ = y * Math.Sin(Camera.pitch) + z * Math.Cos(Camera.pitch);
+            y = newY;
+            z = newZ;
+            //поворот отн. камеры по y:
+            double newX = x * Math.Cos(Camera.yaw) + z * Math.Sin(Camera.yaw);
+            newZ = -x * Math.Sin(Camera.yaw) + z * Math.Cos(Camera.yaw);
+            x = newX;
+            z = newZ;
+            //по z:
+            newX = x * Math.Cos(Camera.roll) - y * Math.Sin(Camera.roll);
+            newY = x * Math.Sin(Camera.roll) + y * Math.Cos(Camera.roll);
 
-            //ВРЕМЕННОЕ ГОВНОРЕШЕНИЕ
-            double z = pt.z + h + 1;
-            //
-            double projX = pt.x * h / z;
-            double projY = pt.y * h / z;
+            x = newX;
+            y = newY;
+            z = newZ;
+
+            double projX = (x * h / z) + Form1.width / 2;
+            double projY = (y * h / z) + Form1.height / 2;
             Point2d pt2d = new Point2d((int)projX, (int)projY);
             return pt2d;
         }
@@ -72,10 +90,10 @@ namespace FEM_chislyaki
             draw.FillRectangle(myBrush, 0, 0, Form1.width, Form1.height);
 
             //test:
-            Point a = new Point(100, 250, 0);
-            Point b = new Point(160, 250, 0);
-            Point c = new Point(130, 0, 40);
-            Point d = new Point(130, 130, 0);
+            Point a = new Point(60, 0, 0);
+            Point b = new Point(0, 60, 0);
+            Point c = new Point(0, 0, 0);
+            Point d = new Point(0, 0, 60);
             Tetrahedron trhd = new Tetrahedron(a, b, c, d);
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);

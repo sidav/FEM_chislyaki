@@ -43,6 +43,28 @@ namespace FEM_chislyaki
             GridRender.draw = formGraphics;
         }
 
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 'a')
+                Camera.camX += 10;
+            if (e.KeyChar == 'd')
+                Camera.camX -= 10;
+            if (e.KeyChar == 'w')
+                Camera.camY += 10;
+            if (e.KeyChar == 's')
+                Camera.camY -= 10;
+            if (e.KeyChar == 'r')
+                Camera.camZ += 10;
+            if (e.KeyChar == 'f')
+                Camera.camZ -= 10;
+            if (e.KeyChar == 'q')
+                Camera.yaw += 0.17;
+            if (e.KeyChar == 'e')
+                Camera.yaw -= 0.17;
+            GridRender.RenderGrid();
+            e.Handled = true;
+        }
+
         private void DoMagicBtn_Click(object sender, EventArgs e)
         {
             GridRender.RenderGrid();

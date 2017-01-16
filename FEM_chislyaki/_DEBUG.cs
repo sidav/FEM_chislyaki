@@ -9,9 +9,9 @@ namespace FEM_chislyaki
 {
     class _DEBUG
     {
-        public static void showVertice(Point p)
+        public static void showPoint(Point p)
         {
-            String s = "x " + p.x.ToString() + " y " + p.y.ToString() + " z " + p.z.ToString();
+            String s = "("+p.x.ToString() + "; " + p.y.ToString() + "; " + p.z.ToString() + ") #" + p.number.ToString();
             MessageBox.Show(s);
         }
         public static void showAllVertices()

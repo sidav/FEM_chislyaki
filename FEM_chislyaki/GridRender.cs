@@ -148,6 +148,7 @@ namespace FEM_chislyaki
             drawString("Всего " + lp.Count + " полигонов.", 0, 0);
             setColor(255, 255, 255);
             drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
+            //_DEBUG.showPoint(lp[0].points[0]);
             foreach (Polygon p in lp)
                 drawPolygon(p);
             myPen.Dispose();

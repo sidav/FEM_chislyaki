@@ -41,7 +41,7 @@ namespace FEM_chislyaki
                         p3 = new Point((i + 1) * hx, (j + 1) * hy, k * hz, WRONG_NUM+ny);
                         p4 = new Point((i + 1) * hx, j * hy, k * hz, WRONG_NUM + nx);
                         p5 = new Point(i * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
-                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1 + n);
+                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1 + nz);
                         p7 = new Point((i + 1) * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1);
                         p8 = new Point((i + 1) * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
                         tetr.Add(new Tetrahedron(p2, p1, p3, p6));

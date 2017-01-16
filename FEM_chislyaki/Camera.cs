@@ -16,7 +16,7 @@ namespace FEM_chislyaki
 
         public static Point getRotateCenter()
         {
-            return new Point(camX, camY, distToRotCenter);
+            return new Point(camX, camY, 0);
         }
 
         public static void Reset()

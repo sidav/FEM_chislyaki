@@ -8,23 +8,23 @@ namespace FEM_chislyaki
 {
     class Polygon
     {
-        public Point pt1, pt2, pt3;
+        public Point[] points = new Point[3];
         public Polygon(Point p1, Point p2, Point p3)
         {
-            pt1 = p1;
-            pt2 = p2;
-            pt3 = p3;
+            points[0] = p1;
+            points[1] = p2;
+            points[2] = p3;
         }
         public bool isEqual(Polygon sample)
         {
-            Point s1 = sample.pt1, s2 = sample.pt2, s3 = sample.pt3;
+            Point s1 = sample.points[0], s2 = sample.points[1], s3 = sample.points[2];
             if (
-                (pt1 == s1 && pt2 == s2 && pt3 == s3) ||
-                (pt1 == s1 && pt2 == s3 && pt3 == s2) ||
-                (pt1 == s2 && pt2 == s1 && pt3 == s3) ||
-                (pt1 == s2 && pt2 == s3 && pt3 == s1) ||
-                (pt1 == s3 && pt2 == s1 && pt3 == s2) ||
-                (pt1 == s3 && pt2 == s2 && pt3 == s1)
+                (points[0] == s1 && points[1] == s2 && points[2] == s3) ||
+                (points[0] == s1 && points[1] == s3 && points[2] == s2) ||
+                (points[0] == s2 && points[1] == s1 && points[2] == s3) ||
+                (points[0] == s2 && points[1] == s3 && points[2] == s1) ||
+                (points[0] == s3 && points[1] == s1 && points[2] == s2) ||
+                (points[0] == s3 && points[1] == s2 && points[2] == s1)
                 )
                 return true;
             return false;

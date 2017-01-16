@@ -27,6 +27,24 @@ namespace FEM_chislyaki
             return a;
         }
 
+        public static Point operator +(Point c1, Point c2)
+        {
+            Point a = new Point(0,0,0,c1.number);
+            a.x = c1.x + c2.x;
+            a.y = c1.y + c2.y;
+            a.z = c1.z + c2.z;
+            return a;
+        }
+
+        public static Point operator -(Point c1, Point c2)
+        {
+            Point a = new Point(0, 0, 0, c1.number);
+            a.x = c1.x - c2.x;
+            a.y = c1.y - c2.y;
+            a.z = c1.z - c2.z;
+            return a;
+        }
+
         public Point(double xx, double yy, double zz)
         {
             x = xx;
@@ -60,5 +78,15 @@ namespace FEM_chislyaki
             x = newX;
             y = newY;
         }
+
+        public Point getRotatedAroundCenter(double roll, double pitch, double yaw)
+        {
+            Point res = new Point(x,y,z,number);
+            res = res - Camera.getRotateCenter();
+            res.Rotate(roll, pitch, yaw);
+            res = res + Camera.getRotateCenter();
+            return res;
+        }
+
     }
 }

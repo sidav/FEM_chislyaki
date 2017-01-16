@@ -10,13 +10,19 @@ namespace FEM_chislyaki
     {
         static Point[,,] makePlate(double hx, double hy, double hz, int nx, int ny, int nz)
         {
+            int num = 0;
             Point[,,] allPoints = new Point[nx, ny, nz];
             for (int i = 0; i < nx; i++)
                 for (int j = 0; j < ny; j++)
                     for (int k = 0; k < nz; k++)
-                        allPoints[i, j, k] = new Point(hx * i, hy * j, hz * k);
+                    {
+                        allPoints[i, j, k] = new Point(hx * i, hy * j, hz * k, num);
+                        num++;
+                    }
             return allPoints;
         }
+
+        
 
         public static List<Tetrahedron> getTetrahedrons(double hx, double hy, double hz, int nx, int ny, int nz)
         {
@@ -29,13 +35,13 @@ namespace FEM_chislyaki
             for (int i = 0; i < nx - 1; i++)
                 for (int j = 0; j < ny - 1; j++)
                     for (int k = 0; k < nz - 1; k++)
-                    {
+                    { ///СДЕЛАТЬ АДЕКВАТНУЮ НУМЕРАЦИЮ!
                         p1 = new Point(i * hx, j * hy, k * hz, WRONG_NUM);
-                        p2 = new Point(i * hx, (j + 1) * hy, k * hz, WRONG_NUM+1);
-                        p3 = new Point((i + 1) * hx, (j + 1) * hy, k * hz, WRONG_NUM+1);
-                        p4 = new Point((i + 1) * hx, j * hy, k * hz, WRONG_NUM + 1);
+                        p2 = new Point(i * hx, (j + 1) * hy, k * hz, WRONG_NUM+(j+1*ny));
+                        p3 = new Point((i + 1) * hx, (j + 1) * hy, k * hz, WRONG_NUM+ny);
+                        p4 = new Point((i + 1) * hx, j * hy, k * hz, WRONG_NUM + nx);
                         p5 = new Point(i * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
-                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1);
+                        p6 = new Point(i * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1 + n);
                         p7 = new Point((i + 1) * hx, (j + 1) * hy, (k + 1) * hz, WRONG_NUM + 1);
                         p8 = new Point((i + 1) * hx, j * hy, (k + 1) * hz, WRONG_NUM + 1);
                         tetr.Add(new Tetrahedron(p2, p1, p3, p6));
@@ -43,7 +49,7 @@ namespace FEM_chislyaki
                         tetr.Add(new Tetrahedron(p5, p1, p6, p8));
                         tetr.Add(new Tetrahedron(p7, p3, p8, p6));
                         tetr.Add(new Tetrahedron(p6, p1, p3, p8));
-                        //current += 5; yt ye;yj
+                        WRONG_NUM++;
                     }
             return tetr;
         }

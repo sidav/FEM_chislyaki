@@ -73,13 +73,15 @@ namespace FEM_chislyaki
                 GridRender.h -= 10;
             if (e.KeyChar == ']')
                 GridRender.h += 10;
+            if (GridRender.h < 2)
+                GridRender.h = 2;
             GridRender.RenderGrid();
             e.Handled = true;
         }
 
         private void Form1_Shown(object sender, EventArgs e)
         {
-            GridRender.h = height / 2;
+            GridRender.h = height;
             GridRender.RenderGrid();
         }
 

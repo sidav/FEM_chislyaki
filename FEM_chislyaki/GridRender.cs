@@ -28,6 +28,11 @@ namespace FEM_chislyaki
             draw.DrawString(s, new Font("Terminus", 10), myBrush, x, y);
         }
 
+        static void drawSmallString(String s, int x, int y)
+        {
+            draw.DrawString(s, new Font("Arial", 8), myBrush, x, y);
+        }
+
         public static Point2d ProjectPoint(Point pt)
         {
             //аффинные преобразования?
@@ -37,31 +42,18 @@ namespace FEM_chislyaki
             x -= Camera.camX;
             y -= Camera.camY;
             z -= Camera.camZ;
-            ////Нужен поворот отн. ЦЕНТРА, а не камеры!
-            ////поворот отн. камеры по x:
-            //double newY = y * Math.Cos(Camera.pitch) - z * Math.Sin(Camera.pitch);
-            //double newZ = y * Math.Sin(Camera.pitch) + z * Math.Cos(Camera.pitch);
-            //y = newY;
-            //z = newZ;
-            ////поворот отн. камеры по y:
-            //double newX = x * Math.Cos(Camera.yaw) + z * Math.Sin(Camera.yaw);
-            //newZ = -x * Math.Sin(Camera.yaw) + z * Math.Cos(Camera.yaw);
-            //x = newX;
-            //z = newZ;
-            ////по z:
-            //newX = x * Math.Cos(Camera.roll) - y * Math.Sin(Camera.roll);
-            //newY = x * Math.Sin(Camera.roll) + y * Math.Cos(Camera.roll);
-
-            //x = newX;
-            //y = newY;
-            //z = newZ;
-
             double projX = (x * h / z) + Form1.width / 2;
             double projY = (y * h / z) + Form1.height / 2;
-            Point2d pt2d = new Point2d((int)projX, (int)projY);
+            Point2d pt2d = new Point2d((int)projX, (int)projY, pt.number);
             if (z <= 0)
                 pt2d.Visibru = false;
             return pt2d;
+        }
+
+        public static Point2d RotateAndProject(Point pt)
+        {
+            Point ptt = pt.getRotatedAroundCenter(Camera.roll, Camera.pitch, Camera.yaw);
+            return ProjectPoint(ptt);
         }
 
         public static List<Polygon> TetrsToPolygons(List<Tetrahedron> tetrs)
@@ -105,59 +97,21 @@ namespace FEM_chislyaki
             return reduced;
         }
 
-        //НИ ХРЕНА НЕ РАБОТАЕТ АБСОЛЮТНО.
-        //static List<Polygon> rotatePolys(List<Polygon> polysIn)
-        //{
-        //    List<Polygon> rotatedPolys = polysIn;
-        //    double cr = Camera.roll, cp = Camera.pitch, cy = Camera.yaw;
-        //    //Вычисляем центр многогранника, заданного кучей полигонов.
-        //    Point meanPoint = new Point(0, 0, 0);
-        //    foreach (Polygon p in polysIn)
-        //    {
-        //        meanPoint.x += p.pt1.x + p.pt2.x + p.pt3.x;
-        //        meanPoint.y += p.pt1.y + p.pt2.y + p.pt3.y;
-        //        meanPoint.z += p.pt1.z + p.pt2.z + p.pt3.z;
-        //    }
-        //    meanPoint.x /= (polysIn.Count * 3);
-        //    meanPoint.y /= (polysIn.Count * 3);
-        //    meanPoint.z /= (polysIn.Count * 3);
-        //    //Центр есть, теперь надо повернуть многогранник относительно центра.
-        //    //Переходим в собственные координаты многогранника:
-        //    foreach (Polygon p in rotatedPolys)
-        //    {
-        //        p.pt1.x -= meanPoint.x;
-        //        p.pt2.x -= meanPoint.x;
-        //        p.pt3.x -= meanPoint.x;
-        //        p.pt1.y -= meanPoint.y;
-        //        p.pt2.y -= meanPoint.y;
-        //        p.pt3.y -= meanPoint.y;
-        //        p.pt1.z -= meanPoint.z;
-        //        p.pt2.z -= meanPoint.z;
-        //        p.pt3.z -= meanPoint.z;
-        //        //Ок. Поворачиваем эту хреновину.
-        //        p.pt1.Rotate(cr, cp, cy);
-        //        p.pt2.Rotate(cr, cp, cy);
-        //        p.pt3.Rotate(cr, cp, cy);
-
-        //        p.pt1.x += meanPoint.x;
-        //        p.pt2.x += meanPoint.x;
-        //        p.pt3.x += meanPoint.x;
-        //        p.pt1.y += meanPoint.y;
-        //        p.pt2.y += meanPoint.y;
-        //        p.pt3.y += meanPoint.y;
-        //        p.pt1.z += meanPoint.z;
-        //        p.pt2.z += meanPoint.z;
-        //        p.pt3.z += meanPoint.z;
-        //    }
-        //    return rotatedPolys;
-        //}
+        static void drawPoint2D(Point2d toDraw)
+        {
+            if (toDraw.Visibru)
+            {
+                draw.FillEllipse(myBrush, toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2, verticeSize, verticeSize);
+                drawSmallString(toDraw.num.ToString(), toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2);
+            }
+        }
 
         static void drawPolygon(Polygon p)
         {
             setColor(255, 0, 0);
-            Point2d a = ProjectPoint(p.pt1);
-            Point2d b = ProjectPoint(p.pt2);
-            Point2d c = ProjectPoint(p.pt3);
+            Point2d a = RotateAndProject(p.points[0]);//ProjectPoint(p.points[0]);
+            Point2d b = RotateAndProject(p.points[1]);//ProjectPoint(p.points[1]);
+            Point2d c = RotateAndProject(p.points[2]);//ProjectPoint(p.points[2]);
             if (a.Visibru && b.Visibru)
                 draw.DrawLine(myPen, a.x, a.y, b.x, b.y);
             if (a.Visibru && c.Visibru)
@@ -166,12 +120,9 @@ namespace FEM_chislyaki
                 draw.DrawLine(myPen, b.x, b.y, c.x, c.y);
             //Рисуем вершины в виде кружочков.
             setColor(128, 224, 0);
-            if (a.Visibru)
-                draw.FillEllipse(myBrush, a.x-verticeSize/2, a.y-verticeSize/2, verticeSize, verticeSize);
-            if (b.Visibru)
-                draw.FillEllipse(myBrush, b.x - verticeSize / 2, b.y - verticeSize / 2, verticeSize, verticeSize);
-            if (c.Visibru)
-                draw.FillEllipse(myBrush, c.x - verticeSize / 2, c.y - verticeSize / 2, verticeSize, verticeSize);
+            drawPoint2D(a);
+            drawPoint2D(b);
+            drawPoint2D(c);
             myPen.Dispose();
             myBrush.Dispose();
         }
@@ -181,21 +132,22 @@ namespace FEM_chislyaki
             setColor(0, 0, 0);
             draw.FillRectangle(myBrush, 0, 0, Form1.width, Form1.height);
             //test:
-            Point a = new Point(60, 0, 0);
-            Point b = new Point(0, 60, 0);
-            Point c = new Point(0, 0, 0);
-            Point d = new Point(0, 0, 60);
+            Point a = new Point(60, 0, 0, 0);
+            Point b = new Point(0, 60, 0, 1);
+            Point c = new Point(0, 0, 0, 2);
+            Point d = new Point(0, 0, 60, 3);
             Tetrahedron trhd = new Tetrahedron(a, b, c, d);
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);
 
-            //lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
+            lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
 
             List<Polygon> lp = TetrsToPolygons(lt);
             lp = reducePolygonsNumber(lp);
             setColor(255, 255, 255);
             drawString("Всего " + lp.Count + " полигонов.", 0, 0);
-            //lp = rotatePolys(lp);
+            setColor(255, 255, 255);
+            drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
             foreach (Polygon p in lp)
                 drawPolygon(p);
             myPen.Dispose();

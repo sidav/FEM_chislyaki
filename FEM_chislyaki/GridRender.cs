@@ -65,6 +65,18 @@ namespace FEM_chislyaki
             }
         }
 
+        static void drawPoint3D(Point toDraw)
+        {
+            drawPoint2D(RotateAndProject(toDraw));
+        }
+
+        static void drawLine3d(Point from, Point to)
+        {
+            Point2d pt1 = RotateAndProject(from);
+            Point2d pt2 = RotateAndProject(to);
+            draw.DrawLine(myPen, pt1.x, pt1.y, pt2.x, pt2.y);
+        }
+
         static void drawPolygon(Polygon p)
         {
             setColor(255, 0, 0);
@@ -86,11 +98,30 @@ namespace FEM_chislyaki
             myBrush.Dispose();
         }
 
+        public static void renderWireframe(Point[,,] wrf)
+        {
+            setColor(128, 128, 128);
+            drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
+            for (int i = 0; i < GridFormer.NX; i++)
+                for (int j = 0; j < GridFormer.NY; j++)
+                    for (int k = 0; k < GridFormer.NZ; k++)
+                    {
+                        setColor(255, 0, 0);
+                        if (k+1 < GridFormer.NZ)
+                            drawLine3d(wrf[i, j, k], wrf[i, j, k+1]);
+                        if (j + 1 < GridFormer.NY)
+                            drawLine3d(wrf[i, j, k], wrf[i, j+1, k]);
+                        if (i + 1 < GridFormer.NX)
+                            drawLine3d(wrf[i, j, k], wrf[i+1, j, k]);
+                        setColor(128, 224, 0);
+                        drawPoint3D(wrf[i, j, k]);
+                    }
+        }
+
         public static void renderTetrahedrons(List<Tetrahedron> lt)
         {
-            setColor(255, 255, 255);
+            setColor(128, 128, 128);
             drawString("Всего " + Metadata.ListPolys.Count + " полигонов.", 0, 0);
-            setColor(255, 255, 255);
             drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
             //_DEBUG.showPoint(lp[0].points[0]);
             foreach (Polygon p in Metadata.ListPolys)
@@ -109,9 +140,8 @@ namespace FEM_chislyaki
             Tetrahedron trhd = new Tetrahedron(a, b, c, d);
             List<Tetrahedron> lt = new List<Tetrahedron>();
             lt.Add(trhd);
-
-            lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
-            renderTetrahedrons(lt);
+            //renderTetrahedrons(lt);
+            renderWireframe(Metadata.Wireframe);
             myPen.Dispose();
             myBrush.Dispose();
             //test end.

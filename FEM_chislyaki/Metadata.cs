@@ -10,10 +10,12 @@ namespace FEM_chislyaki
     {
         public static List<Tetrahedron> ListTetrs;
         public static List<Polygon> ListPolys;
+        public static Point[,,] Wireframe;
 
         public static void makeData()
         {
             ListTetrs = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
+            Wireframe = GridFormer.fuckThis;
             ListPolys = TetrsToPolygons(ListTetrs);
             ListPolys = reducePolygonsNumber(ListPolys);
         }

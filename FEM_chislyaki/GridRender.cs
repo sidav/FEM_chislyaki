@@ -142,6 +142,7 @@ namespace FEM_chislyaki
             lt.Add(trhd);
             //renderTetrahedrons(lt);
             renderWireframe(Metadata.Wireframe);
+            drawString("Last clicked point is" + Metadata.lastPointClicked.ToString(), 0, 20);
             myPen.Dispose();
             myBrush.Dispose();
             //test end.

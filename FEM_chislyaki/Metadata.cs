@@ -11,6 +11,7 @@ namespace FEM_chislyaki
         public static List<Tetrahedron> ListTetrs;
         public static List<Polygon> ListPolys;
         public static Point[,,] Wireframe;
+        public static int lastPointClicked = -1;
 
         public static void makeData()
         {
@@ -36,6 +37,22 @@ namespace FEM_chislyaki
                 polys.Add(currPolygon);
             }
             return polys;
+        }
+
+        public static void findNearestPointOnClick(int clickx, int clicky)
+        {
+            int nearestNum = Wireframe[0, 0, 0].number;
+            ulong nearestDist = GridRender.RotateAndProject(Wireframe[0, 0, 0]).getSqDistanceTo(clickx, clicky);
+            foreach (Point pt in Wireframe)
+            {
+                ulong currDist = GridRender.RotateAndProject(pt).getSqDistanceTo(clickx, clicky);
+                if (nearestDist > currDist)
+                {
+                    nearestNum = pt.number;
+                    nearestDist = currDist;
+                }
+            }
+            lastPointClicked = nearestNum;
         }
 
         public static List<Polygon> reducePolygonsNumber(List<Polygon> polysIn)

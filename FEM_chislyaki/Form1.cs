@@ -89,6 +89,12 @@ namespace FEM_chislyaki
             GridRender.RenderGrid();
         }
 
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            Metadata.findNearestPointOnClick(e.X, e.Y);
+            GridRender.RenderGrid();
+        }
+
         private void DoMagicBtn_Click(object sender, EventArgs e)
         {
             Camera.Reset();

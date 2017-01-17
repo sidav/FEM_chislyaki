@@ -9,9 +9,9 @@ namespace FEM_chislyaki
     class Camera //и зачем оно здесь?..
     {
 
-        const double distToRotCenter = 300;
+        //double distToRotCenter = 200;
 
-        public static double camX = 0, camY = 0, camZ = -300;
+        public static double camX = 0, camY = 0, camZ = -200;
         public static double pitch = 0, roll = 0, yaw = 0;
 
         public static Point getRotateCenter()

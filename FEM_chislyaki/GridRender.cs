@@ -56,47 +56,6 @@ namespace FEM_chislyaki
             return ProjectPoint(ptt);
         }
 
-        public static List<Polygon> TetrsToPolygons(List<Tetrahedron> tetrs)
-        {
-            List<Polygon> polys = new List<Polygon>();
-            Polygon currPolygon;
-            foreach (Tetrahedron t in tetrs)
-            {
-                currPolygon = new Polygon(t.i, t.j, t.k); //основание тетраэдра
-                polys.Add(currPolygon);
-                currPolygon = new Polygon(t.i, t.j, t.p); 
-                polys.Add(currPolygon);
-                currPolygon = new Polygon(t.j, t.k, t.p);
-                polys.Add(currPolygon);
-                currPolygon = new Polygon(t.k, t.i, t.p);
-                polys.Add(currPolygon);
-            }
-            return polys;
-        }
-
-        public static List<Polygon> reducePolygonsNumber(List<Polygon> polysIn)
-        {
-            List<Polygon> reduced = new List<Polygon>();
-            int allPolys = polysIn.Count;
-            reduced.Add(polysIn[0]);
-            bool add = true;
-            for (int i = 1; i < allPolys; i++)
-            {
-                add = true;
-                for (int j = 0; j < i; j++)
-                {
-                    if (polysIn[i].isEqual(polysIn[j]))
-                    {
-                        add = false;
-                        break;
-                    }
-                }
-                if (add)
-                    reduced.Add(polysIn[i]);
-            }
-            return reduced;
-        }
-
         static void drawPoint2D(Point2d toDraw)
         {
             if (toDraw.Visibru)
@@ -127,6 +86,17 @@ namespace FEM_chislyaki
             myBrush.Dispose();
         }
 
+        public static void renderTetrahedrons(List<Tetrahedron> lt)
+        {
+            setColor(255, 255, 255);
+            drawString("Всего " + Metadata.ListPolys.Count + " полигонов.", 0, 0);
+            setColor(255, 255, 255);
+            drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
+            //_DEBUG.showPoint(lp[0].points[0]);
+            foreach (Polygon p in Metadata.ListPolys)
+                drawPolygon(p);
+        }
+
         public static void RenderGrid()
         {
             setColor(0, 0, 0);
@@ -141,16 +111,7 @@ namespace FEM_chislyaki
             lt.Add(trhd);
 
             lt = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
-
-            List<Polygon> lp = TetrsToPolygons(lt);
-            lp = reducePolygonsNumber(lp);
-            setColor(255, 255, 255);
-            drawString("Всего " + lp.Count + " полигонов.", 0, 0);
-            setColor(255, 255, 255);
-            drawPoint2D(RotateAndProject(Camera.getRotateCenter()));
-            //_DEBUG.showPoint(lp[0].points[0]);
-            foreach (Polygon p in lp)
-                drawPolygon(p);
+            renderTetrahedrons(lt);
             myPen.Dispose();
             myBrush.Dispose();
             //test end.

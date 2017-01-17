@@ -12,6 +12,9 @@ namespace FEM_chislyaki
 {
     public partial class Form1 : Form
     {
+        const double degreeInRads = 0.017;
+        const int rotateFactor = 5;
+
         public static float width, height;
         public Form1()
         {
@@ -58,17 +61,17 @@ namespace FEM_chislyaki
             if (e.KeyChar == 'f')
                 Camera.camZ -= 7;
             if (e.KeyChar == 'q')
-                Camera.yaw += 0.017;
+                Camera.yaw += rotateFactor*degreeInRads;
             if (e.KeyChar == 'e')
-                Camera.yaw -= 0.017;
+                Camera.yaw -= rotateFactor*degreeInRads;
             if (e.KeyChar == 't')
-                Camera.pitch += 0.017;
+                Camera.pitch += rotateFactor*degreeInRads;
             if (e.KeyChar == 'g')
-                Camera.pitch -= 0.017;
+                Camera.pitch -= rotateFactor*degreeInRads;
             if (e.KeyChar == 'z')
-                Camera.roll += 0.017;
+                Camera.roll += rotateFactor*degreeInRads;
             if (e.KeyChar == 'c')
-                Camera.roll -= 0.017;
+                Camera.roll -= rotateFactor*degreeInRads;
             if (e.KeyChar == '[')
                 GridRender.h -= 10;
             if (e.KeyChar == ']')
@@ -82,6 +85,7 @@ namespace FEM_chislyaki
         private void Form1_Shown(object sender, EventArgs e)
         {
             GridRender.h = height;
+            Metadata.makeData();
             GridRender.RenderGrid();
         }
 

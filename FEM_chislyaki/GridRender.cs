@@ -60,8 +60,17 @@ namespace FEM_chislyaki
         {
             if (toDraw.Visibru)
             {
-                draw.FillEllipse(myBrush, toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2, verticeSize, verticeSize);
-                drawSmallString(toDraw.num.ToString(), toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2);
+                if (toDraw.num == Metadata.lastPointClicked)
+                {
+                    setColor(255, 0, 255);
+                    draw.FillEllipse(myBrush, toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2, verticeSize + (verticeSize / 2), verticeSize + (verticeSize / 2));
+                    drawString(toDraw.num.ToString(), toDraw.x, toDraw.y);
+                }
+                else
+                {
+                    draw.FillEllipse(myBrush, toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2, verticeSize, verticeSize);
+                    drawSmallString(toDraw.num.ToString(), toDraw.x - verticeSize / 2, toDraw.y - verticeSize / 2);
+                }
             }
         }
 

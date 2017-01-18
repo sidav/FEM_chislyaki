@@ -137,24 +137,24 @@ namespace FEM_chislyaki
                 drawPolygon(p);
         }
 
-        public static void RenderGrid()
+        public static void Render()
         {
             setColor(0, 0, 0);
             draw.FillRectangle(myBrush, 0, 0, Form1.width, Form1.height);
             //test:
-            Point a = new Point(60, 0, 0, 0);
-            Point b = new Point(0, 60, 0, 1);
-            Point c = new Point(0, 0, 0, 2);
-            Point d = new Point(0, 0, 60, 3);
-            Tetrahedron trhd = new Tetrahedron(a, b, c, d);
-            List<Tetrahedron> lt = new List<Tetrahedron>();
-            lt.Add(trhd);
+            //Point a = new Point(60, 0, 0, 0);
+            //Point b = new Point(0, 60, 0, 1);
+            //Point c = new Point(0, 0, 0, 2);
+            //Point d = new Point(0, 0, 60, 3);
+            //Tetrahedron trhd = new Tetrahedron(a, b, c, d);
+            //List<Tetrahedron> lt = new List<Tetrahedron>();
+            //lt.Add(trhd);
             //renderTetrahedrons(lt);
+            //test end.
             renderWireframe(Metadata.Wireframe);
-            drawString("Last clicked point is" + Metadata.lastPointClicked.ToString(), 0, 20);
+            //drawString("Last clicked point is" + Metadata.lastPointClicked.ToString(), 0, 20);
             myPen.Dispose();
             myBrush.Dispose();
-            //test end.
         }
     }
 }

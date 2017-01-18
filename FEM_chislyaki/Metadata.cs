@@ -12,10 +12,12 @@ namespace FEM_chislyaki
         public static List<Polygon> ListPolys;
         public static Point[,,] Wireframe;
         public static int lastPointClicked = -1;
+        public static double hx, hy, hz;
+        public static int nx, ny, nz;
 
         public static void makeData()
         {
-            ListTetrs = GridFormer.getTetrahedrons(10, 10, 10, 4, 4, 2);
+            ListTetrs = GridFormer.getTetrahedrons(hx, hy, hz, nx, ny, nz);
             Wireframe = GridFormer.fuckThis;
             ListPolys = TetrsToPolygons(ListTetrs);
             ListPolys = reducePolygonsNumber(ListPolys);
@@ -52,7 +54,10 @@ namespace FEM_chislyaki
                     nearestDist = currDist;
                 }
             }
-            lastPointClicked = nearestNum;
+            if (nearestNum == lastPointClicked)
+                lastPointClicked = -1;
+            else 
+                lastPointClicked = nearestNum;
         }
 
         public static List<Polygon> reducePolygonsNumber(List<Polygon> polysIn)

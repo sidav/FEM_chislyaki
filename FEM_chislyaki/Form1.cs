@@ -13,6 +13,7 @@ namespace FEM_chislyaki
     public partial class Form1 : Form
     {
         const int rotateFactor = 5;
+        const int pixToSwipe = 15;
 
         public static float width, height;
         public Form1()
@@ -50,9 +51,9 @@ namespace FEM_chislyaki
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 'a')
-                Camera.movX(3);
-            if (e.KeyChar == 'd')
                 Camera.movX(-3);
+            if (e.KeyChar == 'd')
+                Camera.movX(3);
             if (e.KeyChar == 'w')
                 Camera.movY(-3);
             if (e.KeyChar == 's')
@@ -104,14 +105,35 @@ namespace FEM_chislyaki
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
+            //движение при нажатой ПКМ
             if (e.Button == MouseButtons.Right)
             {
+                bool check = false;
                 newMouse.x = e.X;
                 newMouse.y = e.Y;
-                if (Math.Sqrt(newMouse.getSqDistanceTo(oldMouse.x, oldMouse.y)) > 50)
+                if (newMouse.x - oldMouse.x > pixToSwipe)
+                {
+                    Camera.rotY(rotateFactor);
+                    check = true;
+                }
+                if (newMouse.x - oldMouse.x < -pixToSwipe)
+                {
+                    Camera.rotY(-rotateFactor);
+                    check = true;
+                }
+                if (newMouse.y - oldMouse.y > pixToSwipe)
+                {
+                    Camera.rotX(rotateFactor);
+                    check = true;
+                }
+                if (newMouse.y - oldMouse.y < -pixToSwipe)
+                {
+                    Camera.rotX(-rotateFactor);
+                    check = true;
+                }
+                if (check)
                 {
                     oldMouse = new Point2d(e.X, e.Y);
-                    Camera.rotX(rotateFactor);
                     GridRender.Render();
                 }
             }
